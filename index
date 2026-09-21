@@ -193,7 +193,7 @@
     <!-- SCRIPT DE LA APLICACIÓN -->
     <script>
         // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ENTRE LAS COMILLAS
-        const GOOGLE_SCRIPT_URL = ""; 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKMZonl7-wp9O_eUIZuVnMEpRCn9EL-X5DAWbjDLmqoGzho9CSwZJbojtkLALOQkdEBA/exec"; 
         const PASSWORD_DOCENTE = "Vanessa2026";
 
         let datosEstudiante = { nombre: '', anio: '' };
