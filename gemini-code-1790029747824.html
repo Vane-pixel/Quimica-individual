@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salida de Laboratorio: Óxidos y Bases | Segundo de Bachillerato</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti para celebración -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Chart.js para el Dashboard del Docente -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-900 min-h-screen text-slate-100 flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-700/50 p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">🧪</span>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Evaluación Individual de Salida</h1>
+                    <p class="text-xs text-slate-400">Segundo de Bachillerato • Ciencias Naturales[cite: 1]</p>
+                </div>
+            </div>
+            <div>
+                <button onclick="abrirModalDocente()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-cyan-300 px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center space-x-2 shadow">
+                    <span>🔒</span>
+                    <span>Panel Docente</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl w-full mx-auto p-4 md:p-6 my-auto">
+
+        <!-- FASE 1: REGISTRO DE ESTUDIANTE -->
+        <section id="vista-registro" class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div class="text-center mb-6">
+                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-500/30">Actividad Individual de Salida</span>
+                <h2 class="text-2xl md:text-3xl font-bold mt-3 text-white">¡Demuestra lo que Aprendiste![cite: 1]</h2>
+                <p class="text-slate-300 text-sm mt-2">Ingresa tus datos personales para completar tu ticket de salida individual sobre óxidos, hidróxidos y reacciones[cite: 1].</p>
+            </div>
+
+            <form id="form-registro" onsubmit="iniciarDesafio(event)" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Nombre Completo del Estudiante[cite: 1]:</label>
+                    <input type="text" id="nombre-estudiante" required placeholder="Ej. Camila Zambrano" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Año / Curso Escolar[cite: 1]:</label>
+                    <input type="text" id="anio-escolar" required placeholder="Ej. 2do Bachillerato 'A'" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg transition transform active:scale-95">
+                    Comenzar Evaluación Individual 🚀
+                </button>
+            </form>
+        </section>
+
+        <!-- FASE 2: QUIZ / EVALUACIÓN INTERACTIVA -->
+        <section id="vista-quiz" class="hidden bg-slate-800/90 backdrop-blur border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                <div>
+                    <span id="badge-estudiante" class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full font-semibold border border-cyan-500/30"></span>
+                </div>
+                <div class="text-sm font-semibold text-slate-400">
+                    Pregunta <span id="num-pregunta" class="text-cyan-400 font-bold">1</span> de 4
+                </div>
+            </div>
+
+            <div id="contenedor-preguntas">
+                <!-- Dinámico -->
+            </div>
+        </section>
+
+        <!-- FASE 3: RESULTADOS FINALES -->
+        <section id="vista-resultados" class="hidden bg-slate-800/90 backdrop-blur border border-slate-700 rounded-3xl p-6 md:p-8 text-center shadow-2xl">
+            <div class="text-5xl mb-3">🎓</div>
+            <h2 class="text-3xl font-bold text-white mb-2">¡Evaluación Finalizada!</h2>
+            <p class="text-slate-300 text-sm mb-6">Tus respuestas individuales han sido guardadas con éxito en el sistema[cite: 1].</p>
+            
+            <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-6 max-w-md mx-auto mb-6">
+                <p class="text-slate-400 text-xs uppercase tracking-wider mb-1">Calificación Obtenida</p>
+                <div id="puntaje-final" class="text-5xl font-extrabold text-cyan-400 mb-2">0 / 20</div>
+                <p id="mensaje-calificacion" class="text-sm font-medium text-slate-300"></p>
+            </div>
+
+            <button onclick="reiniciarApp()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-3 rounded-xl transition shadow">
+                Volver al Inicio
+            </button>
+        </section>
+
+    </main>
+
+    <!-- MODAL PANEL DOCENTE -->
+    <div id="modal-docente" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">📊</span>
+                    <h3 class="text-lg font-bold text-white">Panel de Acceso del Docente</h3>
+                </div>
+                <button onclick="cerrarModalDocente()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                <!-- Vista Login Docente -->
+                <div id="docente-login" class="max-w-md mx-auto py-8">
+                    <h4 class="text-center font-semibold text-slate-200 mb-4">Ingrese la contraseña del docente</h4>
+                    <form onsubmit="verificarPassword(event)" class="space-y-4">
+                        <input type="password" id="pass-docente" placeholder="••••••••••••" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+                        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold py-3 rounded-xl transition">Ingresar al Panel</button>
+                    </form>
+                </div>
+
+                <!-- Vista Dashboard Docente -->
+                <div id="docente-dashboard" class="hidden space-y-6">
+                    <!-- Estadísticas Rápidas -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl">
+                            <p class="text-xs text-slate-400 uppercase font-semibold">Estudiantes Evaluados</p>
+                            <p id="stat-total-estudiantes" class="text-3xl font-extrabold text-white mt-1">0</p>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl">
+                            <p class="text-xs text-slate-400 uppercase font-semibold">Promedio General</p>
+                            <p id="stat-promedio" class="text-3xl font-extrabold text-cyan-400 mt-1">0 / 20</p>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase font-semibold">Acciones</p>
+                                <p class="text-xs text-slate-300 mt-1">Limpiar registros</p>
+                            </div>
+                            <button onclick="borrarResultados()" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-semibold px-3 py-2 rounded-xl transition">
+                                Borrar Datos 🗑️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-800/60 border border-slate-700/80 p-5 rounded-2xl">
+                            <h5 class="text-sm font-semibold text-slate-300 mb-3">Distribución de Calificaciones</h5>
+                            <div class="relative h-48">
+                                <canvas id="chartCalificaciones"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/80 p-5 rounded-2xl">
+                            <h5 class="text-sm font-semibold text-slate-300 mb-3">Temas que Necesitan Refuerzo[cite: 1]</h5>
+                            <div class="relative h-48">
+                                <canvas id="chartRefuerzos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Resultados -->
+                    <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl overflow-hidden">
+                        <div class="p-4 border-b border-slate-700 font-semibold text-sm text-slate-200">
+                            Reporte Detallado por Estudiante[cite: 1]
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700 text-xs uppercase">
+                                        <th class="p-3">Estudiante[cite: 1]</th>
+                                        <th class="p-3">Año Escolar[cite: 1]</th>
+                                        <th class="p-3">Calificación</th>
+                                        <th class="p-3">Fecha / Hora</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-reportes-body" class="divide-y divide-slate-700/50">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-800 mt-8">
+        Desarrollo interactivo educativo basado en los lineamientos de Ciencias Naturales • Segundo de Bachillerato[cite: 1]
+    </footer>
+
+    <!-- SCRIPT DE LA APLICACIÓN -->
+    <script>
+        // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ENTRE LAS COMILLAS
+        const GOOGLE_SCRIPT_URL = ""; 
+        const PASSWORD_DOCENTE = "Vanessa2026";
+
+        let datosEstudiante = { nombre: '', anio: '' };
+        let preguntaActual = 0;
+        let respuestasUsuario = [];
+        let chartCalificacionesInstancia = null;
+        let chartRefuerzosInstancia = null;
+
+        const preguntas = [
+            {
+                id: 'q1',
+                tipo: 'clasificacion',
+                enunciado: '1. Clasifica MgO y Mg(OH)₂ e indica qué diferencia observas en su composición[cite: 1]:',
+                opciones: [
+                    'MgO es óxido y Mg(OH)₂ es hidróxido; el primero es un compuesto binario y el segundo contiene grupos OH.',
+                    'Ambos son hidróxidos metálicos que contienen grupos OH.',
+                    'MgO es hidróxido y Mg(OH)₂ es un óxido no metálico.'
+                ],
+                respuestaCorrecta: 'MgO es óxido y Mg(OH)₂ es hidróxido; el primero es un compuesto binario y el segundo contiene grupos OH.'
+            },
+            {
+                id: 'q2',
+                tipo: 'formulas',
+                enunciado: '2. Escribe la fórmula correcta del hidróxido de calcio[cite: 1]:',
+                opciones: [
+                    'CaOH',
+                    'Ca(OH)₂',
+                    'CaO₂'
+                ],
+                respuestaCorrecta: 'Ca(OH)₂'
+            },
+            {
+                id: 'q3',
+                tipo: 'nomenclatura',
+                enunciado: '3. Nombra Fe₂O₃ mediante nomenclatura Stock[cite: 1]:',
+                opciones: [
+                    'Óxido de hierro (II)',
+                    'Óxido de hierro (III)',
+                    'Trióxido de hierro'
+                ],
+                respuestaCorrecta: 'Óxido de hierro (III)'
+            },
+            {
+                id: 'q4',
+                tipo: 'reaccion',
+                enunciado: '4. Completa la reacción química: CaO + H₂O → ?[cite: 1]',
+                opciones: [
+                    'Ca(OH)₂',
+                    'CaH₂ + O₂',
+                    'CaO₂ + H₂'
+                ],
+                respuestaCorrecta: 'Ca(OH)₂'
+            }
+        ];
+
+        function iniciarDesafio(e) {
+            e.preventDefault();
+            datosEstudiante.nombre = document.getElementById('nombre-estudiante').value.trim();
+            datosEstudiante.anio = document.getElementById('anio-escolar').value.trim();
+
+            if (!datosEstudiante.nombre || !datosEstudiante.anio) return;
+
+            document.getElementById('badge-estudiante').innerText = `Estudiante: ${datosEstudiante.nombre} (${datosEstudiante.anio})`;
+            document.getElementById('vista-registro').classList.add('hidden');
+            document.getElementById('vista-quiz').classList.remove('hidden');
+
+            preguntaActual = 0;
+            respuestasUsuario = [];
+            mostrarPregunta();
+        }
+
+        function mostrarPregunta() {
+            const contenedor = document.getElementById('contenedor-preguntas');
+            document.getElementById('num-pregunta').innerText = preguntaActual + 1;
+            const p = preguntas[preguntaActual];
+
+            let html = `
+                <div class="bg-slate-900/60 border border-slate-700/60 p-5 rounded-2xl">
+                    <p class="font-semibold text-white mb-4 text-lg">${p.enunciado}</p>
+                    <div class="space-y-3">
+            `;
+
+            p.opciones.forEach((op) => {
+                html += `
+                    <label class="flex items-start space-x-3 bg-slate-800 hover:bg-slate-700/80 p-4 rounded-xl border border-slate-700 cursor-pointer transition">
+                        <input type="radio" name="opcion_pregunta" value="${op}" class="mt-1 text-cyan-500 focus:ring-cyan-400">
+                        <span class="text-sm text-slate-200">${op}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div></div>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="siguientePaso()" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition">
+                        ${preguntaActual === preguntas.length - 1 ? 'Finalizar y Enviar' : 'Siguiente Pregunta'}
+                    </button>
+                </div>
+            `;
+            contenedor.innerHTML = html;
+        }
+
+        function siguientePaso() {
+            const seleccionada = document.querySelector(`input[name="opcion_pregunta"]:checked`);
+            if (!seleccionada) {
+                alert('Por favor, selecciona una respuesta antes de continuar.');
+                return;
+            }
+
+            const p = preguntas[preguntaActual];
+            const esCorrecta = seleccionada.value === p.respuestaCorrecta;
+
+            respuestasUsuario.push({
+                preguntaId: p.id,
+                respuesta: seleccionada.value,
+                correcta: esCorrecta,
+                categoria: p.tipo
+            });
+
+            preguntaActual++;
+            if (preguntaActual < preguntas.length) {
+                mostrarPregunta();
+            } else {
+                finalizarEvaluacion();
+            }
+        }
+
+        function calcularPuntajeTotal() {
+            let correctas = respuestasUsuario.filter(r => r.correcta).length;
+            let nota = (correctas / 4) * 20;
+            return Math.round(nota * 10) / 10;
+        }
+
+        async function finalizarEvaluacion() {
+            const notaFinal = calcularPuntajeTotal();
+            document.getElementById('vista-quiz').classList.add('hidden');
+            document.getElementById('vista-resultados').classList.remove('hidden');
+            document.getElementById('puntaje-final').innerText = `${notaFinal} / 20`;
+
+            let mensaje = "¡Excelente desempeño! Dominas los conceptos individuales de óxidos, hidróxidos y formulación.";
+            if (notaFinal < 14) mensaje = "Buen esfuerzo. Te recomendamos repasar nomenclatura Stock y reacciones de formación.";
+            document.getElementById('mensaje-calificacion').innerText = mensaje;
+
+            if (notaFinal >= 14) {
+                confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+            }
+
+            // Estructura de datos idéntica a la grupal que funciona
+            const registroData = {
+                nombres: datosEstudiante.nombre,
+                anio: datosEstudiante.anio,
+                calificacion: notaFinal,
+                respuestas: respuestasUsuario,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Sincronización idéntica a la grupal (vía JSON y no-cors)
+                if (GOOGLE_SCRIPT_URL) {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(registroData)
+                    });
+                }
+                let historial = JSON.parse(localStorage.getItem('evaluaciones_individual_quimica') || '[]');
+                historial.push(registroData);
+                localStorage.setItem('evaluaciones_individual_quimica', JSON.stringify(historial));
+            } catch (e) {
+                console.error("Error al registrar:", e);
+            }
+        }
+
+        async function obtenerTodosLosResultados() {
+            let resultados = [];
+            try {
+                if (GOOGLE_SCRIPT_URL) {
+                    const response = await fetch(GOOGLE_SCRIPT_URL);
+                    const data = await response.json();
+                    if (Array.isArray(data)) resultados = data;
+                }
+            } catch (e) {
+                console.warn("Leyendo respaldo local.");
+            }
+
+            if (resultados.length === 0) {
+                resultados = JSON.parse(localStorage.getItem('evaluaciones_individual_quimica') || '[]');
+            }
+            return resultados;
+        }
+
+        function reiniciarApp() {
+            document.getElementById('vista-resultados').classList.add('hidden');
+            document.getElementById('vista-registro').classList.remove('hidden');
+            document.getElementById('form-registro').reset();
+        }
+
+        // PANEL DOCENTE
+        function abrirModalDocente() {
+            document.getElementById('modal-docente').classList.remove('hidden');
+            document.getElementById('docente-login').classList.remove('hidden');
+            document.getElementById('docente-dashboard').classList.add('hidden');
+            document.getElementById('pass-docente').value = '';
+        }
+
+        function cerrarModalDocente() {
+            document.getElementById('modal-docente').classList.add('hidden');
+        }
+
+        function verificarPassword(e) {
+            e.preventDefault();
+            const passInput = document.getElementById('pass-docente').value;
+
+            if (passInput === PASSWORD_DOCENTE) {
+                document.getElementById('docente-login').classList.add('hidden');
+                document.getElementById('docente-dashboard').classList.remove('hidden');
+                cargarDashboardDocente();
+            } else {
+                alert('Contraseña incorrecta.');
+                document.getElementById('pass-docente').value = '';
+            }
+        }
+
+        async function cargarDashboardDocente() {
+            const resultados = await obtenerTodosLosResultados();
+            
+            const totalEstudiantes = resultados.length;
+            document.getElementById('stat-total-estudiantes').innerText = totalEstudiantes;
+
+            let sumaNotas = resultados.reduce((acc, curr) => acc + Number(curr.calificacion), 0);
+            let promedio = totalEstudiantes > 0 ? (sumaNotas / totalEstudiantes).toFixed(1) : 0;
+            document.getElementById('stat-promedio').innerText = `${promedio} / 20`;
+
+            const tbody = document.getElementById('tabla-reportes-body');
+            tbody.innerHTML = '';
+            if (totalEstudiantes === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Aún no hay estudiantes registrados.</td></tr>`;
+            } else {
+                resultados.forEach(res => {
+                    let fechaStr = res.timestamp ? new Date(res.timestamp).toLocaleString() : 'Reciente';
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-800/40">
+                            <td class="p-3 font-medium text-white">${res.nombres}</td>
+                            <td class="p-3 text-slate-300">${res.anio}</td>
+                            <td class="p-3 font-bold text-cyan-400">${res.calificacion} / 20</td>
+                            <td class="p-3 text-slate-400 text-xs">${fechaStr}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            let erroresPorCategoria = { clasificacion: 0, formulas: 0, nomenclatura: 0, reaccion: 0 };
+            resultados.forEach(res => {
+                if (res.respuestas) {
+                    res.respuestas.forEach(r => {
+                        if (!r.correcta) {
+                            if (erroresPorCategoria[r.categoria] !== undefined) {
+                                erroresPorCategoria[r.categoria]++;
+                            }
+                        }
+                    });
+                }
+            });
+
+            renderizarGraficos(resultados, erroresPorCategoria);
+        }
+
+        function renderizarGraficos(resultados, errores) {
+            let rangos = { '0-10': 0, '11-14': 0, '15-18': 0, '19-20': 0 };
+            resultados.forEach(r => {
+                let nota = Number(r.calificacion);
+                if (nota <= 10) rangos['0-10']++;
+                else if (nota <= 14) rangos['11-14']++;
+                else if (nota <= 18) rangos['15-18']++;
+                else rangos['19-20']++;
+            });
+
+            if (chartCalificacionesInstancia) chartCalificacionesInstancia.destroy();
+            const ctx1 = document.getElementById('chartCalificaciones').getContext('2d');
+            chartCalificacionesInstancia = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['0 - 10', '11 - 14', '15 - 18', '19 - 20'],
+                    datasets: [{
+                        label: 'Cant. Estudiantes',
+                        data: [rangos['0-10'], rangos['11-14'], rangos['15-18'], rangos['19-20']],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: '#334155' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                    }
+                }
+            });
+
+            if (chartRefuerzosInstancia) chartRefuerzosInstancia.destroy();
+            const ctx2 = document.getElementById('chartRefuerzos').getContext('2d');
+            chartRefuerzosInstancia = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Clasificación', 'Fórmulas', 'Nomenclatura Stock', 'Reacción CaO+H₂O'],
+                    datasets: [{
+                        data: [errores.clasificacion, errores.formulas, errores.nomenclatura, errores.reaccion],
+                        backgroundColor: ['#10b981', '#6366f1', '#06b6d4', '#f43f5e']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#cbd5e1', boxWidth: 12, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function borrarResultados() {
+            if (confirm('¿Estás seguro de borrar todos los registros individuales? Esta acción dejará la aplicación limpia en ceros.')) {
+                localStorage.removeItem('evaluaciones_individual_quimica');
+                alert('¡Registros borrados exitosamente! La app está en ceros.');
+                cargarDashboardDocente();
+            }
+        }
+    </script>
+</body>
+</html>
